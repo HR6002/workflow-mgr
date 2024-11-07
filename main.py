@@ -70,7 +70,7 @@ def inputGetter():
                 if check_directory_exists(f'{project_name}/{workstream_name}/{phase_name}'):
                     console.print("Enter new Meeting Date")
                     while True:
-                        meeting_date_year = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Year(DD): [/] ')
+                        meeting_date_year = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Day(DD): [/] ')
                         meeting_date_month = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Month(MM): [/] ')
                         meeting_date_day = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Year(YYYY): [/] ')
                         if meeting_date_day.isdigit() and meeting_date_month.isdigit() and meeting_date_year.isdigit():
