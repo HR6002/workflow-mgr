@@ -8,22 +8,28 @@ from rich.box import ROUNDED
 from rich.tree import Tree
 from rich import print
 console = Console()
+#Imports the necessary lib
 
-def check_directory_exists(directory_name):
+#checks if a directory exists
+def check_directory_exists(directory_name:str)->bool:
     return os.path.isdir(directory_name)
 
-def print_error(message):
+#prints given error msg in good format 
+def print_error(message:str)->None:
     console.print(f"[bold red]Error:[/bold red] {message}")
 
+#prints common error msg of directory not existig
+#TODO include this in the check_directory_exist func makes it more efficient
 def print_dir_error():
     console.print(f"[bold red]Error:[/bold red] Direcotry Does not exist")
 
+#Gets the input and validates teh input and calls the necessary functions
 def inputGetter():
     usr_input = console.input(prompt='[bold blue]WorkFlow-Mgr >[/] ')
     user_input_args = usr_input.rsplit(' ')
-    user_command = user_input_args[0]
+    user_command = user_input_args[0] #splits the user input for easier handling
     if user_command == 'help':
-        display_help()
+        display_help() 
 
     elif user_command == 'new-project':
         project_name = console.input(prompt='   [purple]Project Name: [/] ')
@@ -70,9 +76,9 @@ def inputGetter():
                 if check_directory_exists(f'{project_name}/{workstream_name}/{phase_name}'):
                     console.print("Enter new Meeting Date")
                     while True:
-                        meeting_date_year = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Day(DD): [/] ')
+                        meeting_date_year = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Year(DD): [/] ')
                         meeting_date_month = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Month(MM): [/] ')
-                        meeting_date_day = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Year(YYYY): [/] ')
+                        meeting_date_day = console.input(prompt=f'[bold blue]WorkFlow-Mgr/{project_name}/{workstream_name}/{phase_name} >[/]       [purple]Meeting Date Day(YYYY): [/] ')
                         if meeting_date_day.isdigit() and meeting_date_month.isdigit() and meeting_date_year.isdigit():
                             console.print("Enter Atendees Name, enter 'finish' to finish ")
                             while True:
@@ -145,7 +151,7 @@ def inputGetter():
 
 
 
-
+# Displays the help page detailing the available commands available
 def display_help():
     table = Table(title="Workflow Manager CLI Help", box=ROUNDED, show_header=True, header_style="bold magenta")
     
@@ -165,21 +171,25 @@ def display_help():
     
     console.print(table)
 
-def createProject(projectName):
+#Creates a directory with the given name of project name
+def createProject(projectName:str)->None:
     os.mkdir(projectName)
 
-def createWorkstream(WorkstreamName, projectName):
+#Creates another folder inside projectname with name workstreamname
+def createWorkstream(WorkstreamName:str, projectName:str)->None:
     try:
         os.mkdir(f'{projectName}/{WorkstreamName}')
     except Exception as e:
         print_error(f'Exception Error: {e}')
 
-def createPhase(PhaseName, WorkstreamName, projectName):
+#Creates another folder inside projectname which is inside project name with a given name of Phase Name 
+def createPhase(PhaseName:str, WorkstreamName:str, projectName:str):
     try:
         os.mkdir(f'{projectName}/{WorkstreamName}/{PhaseName}')
     except Exception as e:
         print_error(f'Exception Error: {e}')
 
+#Creates a meeting txt file  with the date as its name and then a place with NOTES 
 def createMeeting(MeetingDate, Atendees, PhaseName, WorkstreamName, projectName):
     try:
         with open(f'{projectName}/{WorkstreamName}/{PhaseName}/{MeetingDate}.txt', 'w') as file:
@@ -189,8 +199,8 @@ def createMeeting(MeetingDate, Atendees, PhaseName, WorkstreamName, projectName)
     except Exception as e:
         print_error(f'Exception Error: {e}')
 
-
-def showInfo(project):
+#Creates a pretty table to show the current meetings for a project with the attendees that are assigned to it and then the phase and workstream they are part of 
+def showInfo(project:str)->dict:
     workStreams = [i for i in os.listdir(project)]
     phases = {}
     meetings = []
@@ -231,7 +241,8 @@ def showInfo(project):
     print(table)
     return meetings
 
-def display_tree_structure(directory, tree=None):
+#Recursively goes through every folder in the given directory to build a tree to show the structure of the folder
+def display_tree_structure(directory:str, tree=None)->Tree:
     if tree is None:
         tree = Tree(f"📁 [bold yellow]{directory}[/bold yellow]", guide_style="bold bright_blue")
     try:
@@ -248,8 +259,8 @@ def display_tree_structure(directory, tree=None):
             tree.add(f"📄 {entry}", style="dim")
     return tree
 
-
-def createCSV(payload, projectName):
+#Creates a CSV File with a fomat similar to the format of show-table
+def createCSV(payload:str, projectName:str)->None:
     with open(f'output-{projectName}.csv', mode = 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['Meeting Date', 'Attendees', 'Phase', 'Workstream'])
@@ -260,7 +271,8 @@ def createCSV(payload, projectName):
             workstream_name=i['workstream']
             writer.writerow([meeting_date, '; '.join(atendees_name), phase_name, workstream_name])
 
-def importCSV(file):
+#Creates and builds a project structure based on the payload available in the csv file
+def importCSV(file:str)->None:
     project_name = console.input(prompt='   [purple]Project Name: [/] ')
     with open(file, newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
@@ -285,6 +297,7 @@ def importCSV(file):
     os.system('clear')
     os.system('clear')
 
+#Prints the welcome page very pretty
 def main():
     os.system('clear')
     os.system('clear')
