@@ -165,8 +165,8 @@ def display_help():
     table.add_row("new-workstream", "Creates a new workstream with the specified name.")
     table.add_row("new-phase", "Creates a new phase with the specified name.")
     table.add_row("new-meeting", "Creates a new phase with the specified name.")
-    table.add_row("import-project", "Create a project from a CSV file")
-    table.add_row("export-project", "Create a csv file")
+    table.add_row("import", "Create a project from a CSV file")
+    table.add_row("export", "Create a csv file")
 
     
     console.print(table)
